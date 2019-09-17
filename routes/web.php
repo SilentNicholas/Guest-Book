@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/', 'CommentController@index');
+Route::get('/user/{id}', 'UserController@show')->where('id', '[0-9]+');
+Route::post('/user', 'UserController@create');
+Route::group(['prefix' => '/admin', 'namespace' => 'Admin'], function () {
+    Route::get('/', 'DashboardController@index');
+    Route::get('/users', ['as' => 'admin.users', 'uses' => 'UserController@index']);
+    Route::get('/comments', ['as' => 'admin.comments', 'uses' => 'CommentController@index']);
 });
