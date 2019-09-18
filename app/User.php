@@ -6,9 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
+
+    public const IS_BANNED = 1;
+
+    public const IS_ACTIVE = 0;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'email'
     ];
 
     /**
@@ -40,5 +44,25 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public static function add($fields)
+    {
+        $user = new static;
+        $user->fill($fields);
+        $user->email_verified_at = null;
+        $user->banned = self::IS_ACTIVE;
+        $user->save();
+        return $user;
+    }
+
+    public function toggleStatus($user)
+    {
+        if ($user->banned !== 0) {
+            $user->banned = self::IS_ACTIVE;
+        } else {
+            $user->banned = self::IS_BANNED;
+        }
+        $user->save();
     }
 }

@@ -14,18 +14,30 @@
         </thead>
         <tbody>
         @foreach ($users as $user)
-        <tr>
-            <th scope="row">{{ $user->id }}</th>
-            <td>{{ $user->name }}</td>
-            <td>{{ $user->email }}</td>
-            <td>{{ $user->email_verified_at }}</td>
-            <td>{{ $user->banned }}</td>
-            <td>
-                <a><i class="fa fa-ban"></i></a>
-                <a><i class="fa fa-trash"></i></a>
-            </td>
-        </tr>
-            @endforeach
+            <tr>
+                <th scope="row">{{ $user->id }}</th>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->email_verified_at }}</td>
+                @if ($user->banned === 1)
+                    <td>Да</td>
+                @else
+                    <td>Нет</td>
+                @endif
+                <td>
+                    @if ($user->banned === 1)
+                        <button><a href="{{ route('user.edit', $user->id) }}"><i class="fa fa-check"></i></a></button>
+                    @else
+                        <button><a href="{{ route('user.edit', $user->id) }}"><i class="fa fa-ban"></i></a></button>
+                    @endif
+                    {{ Form::open(['route' => ['user.destroy', $user->id], 'method' => 'delete']) }}
+                    <button type="submit"
+                            onclick="return confirm('Вы уверены, что хотите удалить данного пользователя?'); "><i
+                                class="fa fa-trash"></i></button>
+                    {{ Form::close() }}
+                </td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 @endsection

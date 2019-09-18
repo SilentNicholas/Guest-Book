@@ -28,4 +28,14 @@ class Comment extends Model
             ]
         ];
     }
+    
+    public function toggleStatus($comment)
+    {
+        if ($comment->published === 0) {
+            $comment->published = self::IS_PUBLISHED;
+        } else {
+            $comment->published = self::IS_DRAFT;
+        }
+        $comment->save();
+    }
 }
