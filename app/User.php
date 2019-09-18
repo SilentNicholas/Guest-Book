@@ -2,11 +2,11 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use Notifiable;
 
@@ -52,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $user->fill($fields);
         $user->email_verified_at = null;
         $user->banned = self::IS_ACTIVE;
+        $user->remember_token = Str::random(100);
         $user->save();
         return $user;
     }
@@ -63,6 +64,13 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             $user->banned = self::IS_BANNED;
         }
+        $user->save();
+    }
+
+    public function confirm($user)
+    {
+        $user->remember_token = null;
+        $user->email_verified_at = date('Y-m-d H:i:s');
         $user->save();
     }
 }

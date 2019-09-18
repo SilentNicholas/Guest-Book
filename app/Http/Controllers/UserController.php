@@ -12,4 +12,11 @@ class UserController extends Controller
         dd(User::find($id));
         return User::find($id);
     }
+
+    public function emailConfirm($token)
+    {
+        $user = User::where('remember_token', '=', $token)->firstOrFail();
+        $user->confirm($user);
+        return redirect('/')->with('message', 'Ваш email был успешно подтвержден! Теперь вы можете оставлять комментарии.');
+    }
 }

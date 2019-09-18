@@ -12,7 +12,11 @@
         </div>
     @endif
 
-    {{ Form::open(['url' => '/user', 'method' => 'post']) }}
+    @if (Session::has('message'))
+        <p class="alert alert-info">{{ Session::get('message') }}</p>
+    @endif
+
+    {{ Form::open(['url' => '/', 'method' => 'post']) }}
         <div class="form-group">
             {{ Form::label('username', 'Ваш никнейм') }}
             {{ Form::text('username', '', ['placeholder' => 'Введите ваш ник', 'class' => 'form-control', 'id' => 'username']) }}

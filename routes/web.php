@@ -13,7 +13,8 @@
 
 Route::get('/', 'CommentController@index');
 Route::get('/user/{id}', 'UserController@show')->where('id', '[0-9]+');
-Route::post('/user', 'FormController@create');
+Route::post('/', 'FormController@create');
+Route::get('/confirm/{token}', ['as' => 'email.confirm', 'uses' => 'UserController@emailConfirm']);
 Route::group(['prefix' => '/admin', 'namespace' => 'Admin'], function () {
     Route::get('/', 'DashboardController@index');
     Route::get('/users', ['as' => 'admin.users', 'uses' => 'UserController@index']);
