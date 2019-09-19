@@ -6,12 +6,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Authenticatable
 {
     use Notifiable;
 
+    /**
+     * @const int
+     */
     public const IS_BANNED = 1;
 
+    /**
+     * @const int
+     */
     public const IS_ACTIVE = 0;
 
     /**
@@ -41,11 +51,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * @param $fields
+     * @return User
+     */
     public static function add($fields)
     {
         $user = new static;
@@ -57,7 +74,10 @@ class User extends Authenticatable
         return $user;
     }
 
-    public function toggleStatus($user)
+    /**
+     * @param $user
+     */
+    public function toggleStatus(User $user)
     {
         if ($user->banned !== 0) {
             $user->banned = self::IS_ACTIVE;
@@ -67,10 +87,40 @@ class User extends Authenticatable
         $user->save();
     }
 
-    public function confirm($user)
+    /**
+     * @param $user
+     */
+    public function confirm(User $user)
     {
         $user->remember_token = null;
         $user->email_verified_at = date('Y-m-d H:i:s');
         $user->save();
+    }
+
+    /**
+     * @param $email
+     * @return bool
+     */
+    public function isUserRegister(string $email)
+    {
+        return User::where('email', '=', $email)->exists();
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function isUsernameInUse(string $name)
+    {
+        return User::where('name', '=', $name)->exists();
+    }
+
+    /**
+     * @param $email
+     * @return User
+     */
+    public function getUserByEmail(string $email)
+    {
+        return User::where('email', '=', $email)->firstOrFail();
     }
 }

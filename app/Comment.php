@@ -5,21 +5,40 @@ namespace App;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Comment
+ * @package App
+ */
 class Comment extends Model
 {
     use Sluggable;
 
+    /**
+     * @const int
+     */
     public const IS_PUBLISHED = 1;
 
+    /**
+     * @const int
+     */
     public const IS_DRAFT = 0;
 
+    /**
+     * @var array
+     */
     protected $fillable = ['title', 'text'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * @return array
+     */
     public function sluggable()
     {
         return [
@@ -29,7 +48,11 @@ class Comment extends Model
         ];
     }
 
-    public static function add($fields)
+    /**
+     * @param array $fields
+     * @return Comment
+     */
+    public static function add(array $fields)
     {
         $comment = new static;
         $comment->fill($fields);
@@ -37,8 +60,11 @@ class Comment extends Model
         $comment->save();
         return $comment;
     }
-    
-    public function toggleStatus($comment)
+
+    /**
+     * @param Comment $comment
+     */
+    public function toggleStatus(Comment $comment)
     {
         if ($comment->published === 0) {
             $comment->published = self::IS_PUBLISHED;
