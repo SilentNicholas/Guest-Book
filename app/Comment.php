@@ -28,6 +28,15 @@ class Comment extends Model
             ]
         ];
     }
+
+    public static function add($fields)
+    {
+        $comment = new static;
+        $comment->fill($fields);
+        $comment->user_id = $fields['user']->id;
+        $comment->save();
+        return $comment;
+    }
     
     public function toggleStatus($comment)
     {

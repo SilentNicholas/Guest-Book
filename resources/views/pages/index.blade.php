@@ -43,6 +43,7 @@
         <div class="card-body">
             <h5 class="card-title">{{ $comment->title }}</h5>
             <p class="card-text">{{ $comment->text }}</p>
+            <p class="card-text">{{ $comment->updated_at }}</p>
         </div>
     </div>
     @endforeach

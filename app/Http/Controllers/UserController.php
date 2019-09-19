@@ -9,8 +9,7 @@ class UserController extends Controller
 {
     public function show($id)
     {
-        dd(User::find($id));
-        return User::find($id);
+        return view('pages.profile', ['user' => User::find($id)]);
     }
 
     public function emailConfirm($token)

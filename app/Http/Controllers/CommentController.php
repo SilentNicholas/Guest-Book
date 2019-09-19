@@ -9,6 +9,6 @@ class CommentController extends Controller
 {
     public function index()
     {
-        return view('pages.index', ['comments' => Comment::paginate(15)]);
+        return view('pages.index', ['comments' => Comment::orderBy('updated_at', 'desc')->paginate(15)]);
     }
 }
